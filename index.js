@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require("express");
 const models = require('./models/models.mjs');
 const mongoose = require('mongoose');

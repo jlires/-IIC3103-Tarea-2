@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-const models = require('./models/models.mjs');
+const models = require('./models/models.js');
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb+srv://hamburguesero:hamburguesero@cluster0-vgj33.mongodb.net/hamburgueseria?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })

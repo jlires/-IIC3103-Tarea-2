@@ -42,7 +42,7 @@ app.post("/hamburguesa", (req, res) => {
 // GET /hamburguesa/{id} [Hamburguesa según id]
 app.get("/hamburguesa/:id", (req, res) => {
   console.log(`GET /hamburguesa/${req.params.id}`);
-  Hamburguesa.find({_id: req.params.id }, (err, hamburguesa) => {
+  Hamburguesa.findOne({_id: req.params.id }, (err, hamburguesa) => {
     if(err) res.status(500).send(err.message);
     else if(hamburguesa === null) res.status(404).send("Hamburguesa inexistente.")
     else res.status(200).jsonp(hamburguesa);
@@ -158,7 +158,7 @@ app.patch("/ingrediente/:id", (req, res) => {
 // GET /ingrediente/{id} [Ingrediente según id]
 app.get("/ingrediente/:id", (req, res) => {
   console.log(`GET /ingrediente/${req.params.id}`);
-  Ingrediente.findById({_id: req.params.id }, (err, ingrediente) => {
+  Ingrediente.findOne({_id: req.params.id }, (err, ingrediente) => {
     if(err) res.status(500).send(err.message);
     else if(ingrediente === null) res.status(404).send("Ingrediente inexistente.");
     else res.status(200).jsonp(ingrediente);

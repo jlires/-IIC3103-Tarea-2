@@ -43,7 +43,10 @@ app.post("/hamburguesa", (req, res) => {
 app.get("/hamburguesa/:id", (req, res) => {
   console.log(`GET /hamburguesa/${req.params.id}`);
   Hamburguesa.findOne({_id: req.params.id }, (err, hamburguesa) => {
-    if(err) res.status(500).send(err.message);
+    if(err) {
+      if (err.name === "CastError") res.status(400).send("id invalido");
+      else res.status(500).send(err.message);
+    }
     else if(hamburguesa === null) res.status(404).send("Hamburguesa inexistente.")
     else res.status(200).jsonp(hamburguesa);
   });
@@ -53,7 +56,10 @@ app.get("/hamburguesa/:id", (req, res) => {
 app.delete("/hamburguesa/:id", (req, res) => {
   console.log(`DELETE /hamburguesa/${req.params.id}`);
   Hamburguesa.findByIdAndDelete({_id: req.params.id }, (err, hamburguesa) => {
-    if(err) res.status(500).send(err.message);
+    if(err) {
+      if (err.name === "CastError") res.status(400).send("id invalido");
+      else res.status(500).send(err.message);
+    }
     else if(hamburguesa === null) res.status(404).send("Hamburguesa inexistente.");
     else res.status(200).jsonp(hamburguesa);
   });
@@ -66,7 +72,10 @@ app.patch("/hamburguesa/:id", (req, res) => {
     res.status(400).send("Parametros invalidos.");
   } else {
     Hamburguesa.findOneAndUpdate({_id: req.params.id }, req.body, {new: true}, (err, hamburguesa) => {
-      if(err) res.status(400).send("Parametros invalidos.");
+      if(err) {
+        if (err.name === "CastError") res.status(404).send("Hamburguesa inexistente.");
+        else res.status(500).send(err.message);
+      }
       else if(hamburguesa === null) res.status(404).send("Hamburguesa inexistente.");
       else {
         res.status(200).jsonp(hamburguesa);
@@ -79,7 +88,10 @@ app.patch("/hamburguesa/:id", (req, res) => {
 app.put("/hamburguesa/:hid/ingrediente/:iid", (req, res) => {
   console.log(`PUT /hamburguesa/${req.params.hid}/ingrediente/${req.params.iid}`);
   Ingrediente.findById({_id: req.params.iid }, (err, ingrediente) => {
-    if(err) res.status(500).send(err.message);
+    if(err) {
+      if (err.name === "CastError") res.status(404).send("Ingrediente inexistente.");
+      else res.status(500).send(err.message);
+    }
     else if(ingrediente === null) res.status(404).send("Ingrediente inexistente.");
     else {
       const path = `${ROOT}/ingrediente/${req.params.iid}`;
@@ -87,7 +99,10 @@ app.put("/hamburguesa/:hid/ingrediente/:iid", (req, res) => {
         path: path
       });
       Hamburguesa.findOneAndUpdate({_id: req.params.hid, 'ingredientes.path': {$ne: path}}, {$push: { ingredientes: ing }}, {new: true}, (err, hamburguesa) => {
-        if(err) res.status(500).send(err.message);
+        if(err) {
+          if (err.name === "CastError") res.status(400).send("Hamburguesa inexistente.");
+          else res.status(500).send(err.message);
+        }
         else if(hamburguesa === null) {
           res.status(400).send("Hamburguesa inexistente.");
         }
@@ -103,12 +118,18 @@ app.put("/hamburguesa/:hid/ingrediente/:iid", (req, res) => {
 app.delete("/hamburguesa/:hid/ingrediente/:iid", (req, res) => {
   console.log(`DELETE /hamburguesa/${req.params.hid}/ingrediente/${req.params.iid}`);
   Ingrediente.findById({_id: req.params.iid }, (err, ingrediente) => {
-    if(err) res.status(500).send(err.message);
+    if(err) {
+      if (err.name === "CastError") res.status(404).send("Ingrediente inexistente.");
+      else res.status(500).send(err.message);
+    }
     else if(ingrediente === null) res.status(404).send("Ingrediente inexistente.");
     else {
       const path = `${ROOT}/ingrediente/${req.params.iid}`;
       Hamburguesa.findOneAndUpdate({_id: req.params.hid}, {$pull: { ingredientes: {path: path} }}, {multi: true, new: true}, (err, hamburguesa) => {
-        if(err) res.status(500).send(err.message);
+        if(err) {
+          if (err.name === "CastError") res.status(400).send("Hamburguesa inexistente.");
+          else res.status(500).send(err.message);
+        }
         else if(hamburguesa === null) {
           res.status(400).send("Hamburguesa inexistente.");
         }
@@ -159,7 +180,10 @@ app.patch("/ingrediente/:id", (req, res) => {
 app.get("/ingrediente/:id", (req, res) => {
   console.log(`GET /ingrediente/${req.params.id}`);
   Ingrediente.findOne({_id: req.params.id }, (err, ingrediente) => {
-    if(err) res.status(500).send(err);
+    if(err) {
+      if (err.name === "CastError") res.status(400).send("id invalido");
+      else res.status(500).send(err.message);
+    }
     else if(ingrediente === null) res.status(404).send("Ingrediente inexistente.");
     else res.status(200).jsonp(ingrediente);
   });
@@ -170,7 +194,10 @@ app.delete("/ingrediente/:id", (req, res) => {
   console.log(`DELETE /ingrediente/${req.params.id}`);
   const path = `${ROOT}/ingrediente/${req.params.id}`;
   Ingrediente.findOne({_id: req.params.id }, (err, ingrediente) => {
-    if(err) res.status(500).send(err.message);
+    if(err) {
+      if (err.name === "CastError") res.status(400).send("id invalido");
+      else res.status(500).send(err.message);
+    }
     else if(ingrediente === null) res.status(404).send("Ingrediente inexistente.");
     else {
       Hamburguesa.findOne({ingredientes: {$elemMatch:{path:path}}}, (err, hamburguesa) => {

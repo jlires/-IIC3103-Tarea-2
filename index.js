@@ -107,7 +107,7 @@ app.put("/hamburguesa/:hid/ingrediente/:iid", (req, res) => {
           res.status(400).send("Hamburguesa inexistente.");
         }
         else {
-          res.status(200).jsonp(hamburguesa);
+          res.status(201).jsonp(hamburguesa);
         }
       });
     }

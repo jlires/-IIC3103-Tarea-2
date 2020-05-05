@@ -14,7 +14,7 @@ let Ingrediente = mongoose.model('Ingrediente', models.ingredienteSchema);
 let Counter = mongoose.model('counter', models.counterSchema);
 
 var PORT = process.env.PORT || 3000;
-var ROOT = "localhost:3000";
+var ROOT = "https://hamburgueseria-api.herokuapp.com";
 
 const app = express();
 app.use(express.json());
